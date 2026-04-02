@@ -15,7 +15,7 @@ To simulate an SMB Brute Force attack on a Windows 11 machine and analyze the re
 Using Hydra to attack the SMB protocol:
 `hydra -l JOXOE -P pass.txt 192.168.87.128 smb -V -f`
 
-
+![](Image2026-04-02at14.55.png)
 
 ## 🔍 Detection Phase (Splunk)
 Detected multiple failed login attempts using the following SPL:
