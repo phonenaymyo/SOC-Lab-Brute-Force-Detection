@@ -1,1 +1,25 @@
 
+---
+
+## 🛡️ Project 2: Privilege Escalation & Persistence Detection
+
+### 🎯 Objective
+To simulate a post-exploitation scenario where an attacker creates a backdoor administrator account and to detect this activity using Splunk.
+
+### 🛠️ Attack Steps (Kali Linux)
+Once a reverse shell was established, the following commands were executed to maintain persistence:
+1. **Create User:** `net user hacker_admin Password123 /add`
+2. **Escalate Privileges:** `net localgroup administrators hacker_admin /add`
+
+*(ဒီနေရာမှာ Kali Terminal Screenshot ပုံကို ထည့်ပါ)*
+![Privilege Escalation Attack](မင်းတင်ထားတဲ့ပုံနာမည်.png)
+
+### 🔍 Detection in Splunk
+I monitored the Windows Security event logs and identified the following critical Event IDs:
+* **Event ID 4720:** A user account was created.
+* **Event ID 4732:** A member was added to a security-enabled local group.
+
+**SPL Query used:**
+```spl
+index=main (EventCode=4720 OR EventCode=4732)
+| table _time, host, EventCode, TargetUserName, MemberName, SubjectUserName
