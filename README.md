@@ -26,3 +26,46 @@ index=main EventCode=4625 | stats count by src_ip, TargetUserName
 <img width="3360" height="724" alt="Image 2026-04-02 at 15 07" src="https://github.com/user-attachments/assets/41fec5bb-6e37-4610-a819-8835f7aa7843" />
 <img width="3394" height="888" alt="Image 2026-04-02 at 15 04" src="https://github.com/user-attachments/assets/dc22eb08-f81d-4305-986f-a4d88c37a3e9" />
 <img width="3376" height="892" alt="Image 2026-04-02 at 15 05" src="https://github.com/user-attachments/assets/9d4707bf-9537-4e88-a1a3-3b65a8c63700" />
+---
+
+## 🛡️ Project 2: Privilege Escalation & Persistence Detection
+
+### 🎯 Objective
+To simulate a post-exploitation scenario where an attacker creates a backdoor administrator account and to detect this activity using Splunk.
+
+### 🛠️ Attack Steps (Kali Linux)
+Once a reverse shell was established, the following commands were executed to maintain persistence:
+1. **Create User:** `net user hacker_admin Password123 /add`
+2. **Escalate Privileges:** `net localgroup administrators hacker_admin /add`
+
+![Privilege Escalation Attack]<img width="635" height="450" alt="Screenshot 2026-04-07 at 13 38 30" src="https://github.com/user-attachments/assets/3e15996f-b39c-48fc-a094-3b3d9e19961e" /><img width="624" height="222" alt="Screenshot 2026-04-07 at 13 38 48" src="https://github.com/user-attachments/assets/92544cdb-b183-4239-9b97-a2e82ace34ac" />
+
+<img width="633" height="277" alt="Screenshot 2026-04-07 at 13 50 52" src="https://github.com/user-attachments/assets/7800a5ed-ac0f-40ef-bcfc-c6ddee2cac5d" />
+
+
+### 🔍 Detection in Splunk
+I monitored the Windows Security event logs and identified the following critical Event IDs:
+* **Event ID 4720:** A user account was created.
+* **Event ID 4732:** A member was added to a security-enabled local group.
+
+**SPL Query used:**
+index=main (EventCode=4720 OR EventCode=4732)
+| table _time, host, EventCode, TargetUserName, MemberName, SubjectUserName
+<img width="932" height="930" alt="Screenshot 2026-04-07 at 13 53 11" src="https://github.com/user-attachments/assets/37549c8b-b055-4344-b0fc-58f47ad8b38b" />
+<img width="681" height="714" alt="Screenshot 2026-04-07 at 13 57 45" src="https://github.com/user-attachments/assets/75c4e31c-8282-4a4d-b6b0-d4e6541f5b44" />
+
+💡 SOC Analyst Takeaway
+
+Detecting the creation of unauthorized local administrators is a critical task. In a production environment, this should trigger an High-Priority Alert to investigate the SubjectUserName (the account that performed the action) for potential compromise.
+
+
+
+
+
+
+
+
+
+
+
+
